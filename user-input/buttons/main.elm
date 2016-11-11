@@ -2,23 +2,24 @@ import Html exposing (Html, text, div, button)
 import Html.App as App
 import Html.Events exposing (onClick)
 
-main = App.beginnerProgram { model = model, view = view, update = update }
+main = App.beginnerProgram { model = init, view = view, update = update }
 
 -- MODEL
 
 type alias Model = Int
-model : Model
-model = 0
+init : Model
+init = 0
 
 -- UPDATE
 
-type Message = Increment | Decrement
+type Message = Increment | Decrement | Reset
 
 update : Message -> Model -> Model
 update message model =
   case message of
     Increment -> model + 1
     Decrement -> model - 1
+    Reset -> 0
 
 -- VIEW
 
@@ -28,4 +29,5 @@ view model =
     [ button [ onClick Increment ] [ text "+" ]
     , div [] [ text (toString model) ]
     , button [ onClick Decrement ] [ text "-" ]
+    , button [ onClick Reset ] [ text "Reset" ]
     ]
