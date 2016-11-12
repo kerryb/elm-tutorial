@@ -37,21 +37,26 @@ update message model =
 
 validate : Model -> Model
 validate model =
-  validatePasswordLength (validatePasswordsMatch { model | errors = [] })
+  { model | errors =
+    List.concat
+      [ (passwordLengthErrors model)
+      , (passwordConfirmationErrors model)
+      ]
+  }
 
-validatePasswordLength : Model -> Model
-validatePasswordLength model =
+passwordLengthErrors : Model -> List String
+passwordLengthErrors model =
   if String.length model.password >= 8 then
-     model
+     []
   else
-    { model | errors = "Password must be at least eight characters" :: model.errors }
+    ["Password must be at least eight characters"]
 
-validatePasswordsMatch : Model -> Model
-validatePasswordsMatch model =
+passwordConfirmationErrors : Model -> List String
+passwordConfirmationErrors model =
   if model.password == model.passwordConfirmation then
-     model
+     []
   else
-    { model | errors = "Passwords don't match" :: model.errors }
+    ["Passwords don't match"]
 
 -- VIEW
 
