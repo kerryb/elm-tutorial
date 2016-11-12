@@ -3,6 +3,7 @@ import Html.App as App
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import String
+import List
 
 main = App.beginnerProgram { model = model, view = view, update = update }
 
@@ -12,9 +13,10 @@ type alias Model =
   { name : String
   , password : String
   , passwordConfirmation : String
+  , errors : List String
   }
 model : Model
-model = Model "" "" ""
+model = Model "" "" "" []
 
 -- UPDATE
 
@@ -25,10 +27,24 @@ type Message
 
 update : Message -> Model -> Model
 update message model =
-  case message of
-    Name name -> { model | name = name }
-    Password password -> { model | password = password }
-    PasswordConfirmation passwordConfirmation -> { model | passwordConfirmation = passwordConfirmation }
+  let
+    updatedModel = case message of
+      Name name -> { model | name = name }
+      Password password -> { model | password = password }
+      PasswordConfirmation passwordConfirmation -> { model | passwordConfirmation = passwordConfirmation }
+  in
+    validate updatedModel
+
+validate : Model -> Model
+validate model =
+  validatePasswordsPatch { model | errors = [] }
+
+validatePasswordsPatch : Model -> Model
+validatePasswordsPatch model =
+  if model.password == model.passwordConfirmation then
+     model
+  else
+    { model | errors = "Passwords don't match" :: model.errors }
 
 -- VIEW
 
@@ -45,9 +61,9 @@ viewValidation : Model -> Html Message
 viewValidation model =
   let
     (colour, message) =
-      if model.password == model.passwordConfirmation then
-        ("green", "Cool")
+      if List.isEmpty model.errors then
+        ("green", "OK")
       else
-        ("red", "Nope")
+        ("red", String.join "; " model.errors)
   in
     div [style [("color", colour)] ] [text message]
