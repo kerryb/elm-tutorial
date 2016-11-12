@@ -4,6 +4,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import String
 import List
+import Regex
 
 main = App.beginnerProgram { model = model, view = view, update = update }
 
@@ -41,6 +42,9 @@ validate model =
     List.concat
       [ (passwordLengthErrors model)
       , (passwordConfirmationErrors model)
+      , (passwordLowerCaseLetterErrors model)
+      , (passwordUpperCaseLetterErrors model)
+      , (passwordDigitErrors model)
       ]
   }
 
@@ -57,6 +61,27 @@ passwordConfirmationErrors model =
      []
   else
     ["Passwords don't match"]
+
+passwordLowerCaseLetterErrors : Model -> List String
+passwordLowerCaseLetterErrors model =
+  if Regex.contains (Regex.regex "[a-z]") model.password then
+     []
+  else
+    ["Password must contain a lower case letter"]
+
+passwordUpperCaseLetterErrors : Model -> List String
+passwordUpperCaseLetterErrors model =
+  if Regex.contains (Regex.regex "[A-Z]") model.password then
+     []
+  else
+    ["Password must contain an upper case letter"]
+
+passwordDigitErrors : Model -> List String
+passwordDigitErrors model =
+  if Regex.contains (Regex.regex "\\d") model.password then
+     []
+  else
+    ["Password must contain a digit"]
 
 -- VIEW
 
