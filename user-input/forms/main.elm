@@ -61,16 +61,13 @@ view model =
     [ input [ placeholder "Name", onInput Name ] []
     , input [ type' "password", placeholder "Password", onInput Password ] []
     , input [ type' "password", placeholder "Password confirmation", onInput PasswordConfirmation ] []
-    , viewValidation model
+    , (errorMessages model)
     ]
 
-viewValidation : Model -> Html Message
-viewValidation model =
-  let
-    (colour, message) =
-      if List.isEmpty model.errors then
-        ("green", "OK")
-      else
-        ("red", String.join ". " model.errors)
-  in
-    div [style [("color", colour)] ] [text message]
+errorMessages : Model -> Html Message
+errorMessages model =
+  ul [] (List.map errorMessage model.errors)
+
+errorMessage : String -> Html Message
+errorMessage error =
+  li [style [("color", "red")] ] [text error]
