@@ -37,10 +37,17 @@ update message model =
 
 validate : Model -> Model
 validate model =
-  validatePasswordsPatch { model | errors = [] }
+  validatePasswordLength (validatePasswordsMatch { model | errors = [] })
 
-validatePasswordsPatch : Model -> Model
-validatePasswordsPatch model =
+validatePasswordLength : Model -> Model
+validatePasswordLength model =
+  if String.length model.password >= 8 then
+     model
+  else
+    { model | errors = "Password must be at least eight characters" :: model.errors }
+
+validatePasswordsMatch : Model -> Model
+validatePasswordsMatch model =
   if model.password == model.passwordConfirmation then
      model
   else
@@ -64,6 +71,6 @@ viewValidation model =
       if List.isEmpty model.errors then
         ("green", "OK")
       else
-        ("red", String.join "; " model.errors)
+        ("red", String.join ". " model.errors)
   in
     div [style [("color", colour)] ] [text message]
