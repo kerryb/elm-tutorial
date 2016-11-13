@@ -1,7 +1,7 @@
 import Html exposing (..)
 import Html.App as App
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onClick)
 import String
 import List
 import Regex
@@ -27,17 +27,16 @@ type Message
   | Age String
   | Password String
   | PasswordConfirmation String
+  | Submit
 
 update : Message -> Model -> Model
 update message model =
-  let
-    updatedModel = case message of
-      Name name -> { model | name = name }
-      Age age -> { model | age = age }
-      Password password -> { model | password = password }
-      PasswordConfirmation passwordConfirmation -> { model | passwordConfirmation = passwordConfirmation }
-  in
-    validate updatedModel
+  case message of
+    Name name -> { model | name = name }
+    Age age -> { model | age = age }
+    Password password -> { model | password = password }
+    PasswordConfirmation passwordConfirmation -> { model | passwordConfirmation = passwordConfirmation }
+    Submit -> validate model
 
 validate : Model -> Model
 validate model =
@@ -106,6 +105,7 @@ view model =
     , input [ placeholder "Age", onInput Age ] []
     , input [ type' "password", placeholder "Password", onInput Password ] []
     , input [ type' "password", placeholder "Password confirmation", onInput PasswordConfirmation ] []
+    , input [ type' "submit", onClick Submit ] []
     , (errorMessages model)
     ]
 
