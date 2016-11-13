@@ -12,17 +12,19 @@ main = App.beginnerProgram { model = model, view = view, update = update }
 
 type alias Model =
   { name : String
+  , age : String
   , password : String
   , passwordConfirmation : String
   , errors : List String
   }
 model : Model
-model = Model "" "" "" []
+model = Model "" "" "" "" []
 
 -- UPDATE
 
 type Message
   = Name String
+  | Age String
   | Password String
   | PasswordConfirmation String
 
@@ -31,6 +33,7 @@ update message model =
   let
     updatedModel = case message of
       Name name -> { model | name = name }
+      Age age -> { model | age = age }
       Password password -> { model | password = password }
       PasswordConfirmation passwordConfirmation -> { model | passwordConfirmation = passwordConfirmation }
   in
@@ -40,13 +43,24 @@ validate : Model -> Model
 validate model =
   { model | errors =
     List.concat
-      [ (passwordLengthErrors model)
+      [ (ageErrors model)
+      , (passwordLengthErrors model)
       , (passwordConfirmationErrors model)
       , (passwordLowerCaseLetterErrors model)
       , (passwordUpperCaseLetterErrors model)
       , (passwordDigitErrors model)
       ]
   }
+
+ageErrors : Model -> List String
+ageErrors model =
+  case String.toInt model.age of
+    Ok age ->
+      if age >= 0 then
+         []
+      else
+        ["Age must be positive"]
+    Err _ -> ["Age must be a number"]
 
 passwordLengthErrors : Model -> List String
 passwordLengthErrors model =
@@ -89,6 +103,7 @@ view : Model -> Html Message
 view model =
   div []
     [ input [ placeholder "Name", onInput Name ] []
+    , input [ placeholder "Age", onInput Age ] []
     , input [ type' "password", placeholder "Password", onInput Password ] []
     , input [ type' "password", placeholder "Password confirmation", onInput PasswordConfirmation ] []
     , (errorMessages model)
