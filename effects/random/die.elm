@@ -9,7 +9,7 @@ main = die 6
 die : Int -> Html.Html msg
 die number =
   svg
-    [ version "1.1", x "0", y "0", viewBox "0 0 100 100"
+    [ version "1.1", x "0", y "0", viewBox "0 0 100 100", width "100", height "100"
     ]
     ( [ rect [ fill "#f00", x "0", y "0", width "100", height "100", rx "10", ry "10" ] []
       ]
