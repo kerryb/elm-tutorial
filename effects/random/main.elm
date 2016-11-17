@@ -14,21 +14,24 @@ main = App.program { init = init
 -- MODEL
 
 type alias Model =
-  { dieFace : Int
+  { dieFaces : List Int
   }
 
 
 -- UPDATE
 
 type Message = Roll
-             | NewFace Int
+             | NewFaces (List Int)
 
 update : Message -> Model -> (Model, Cmd Message)
 update message model =
   case message of
-    Roll -> (model, Random.generate NewFace (Random.int 1 6))
-    NewFace face -> ({model | dieFace = face }, Cmd.none)
+    Roll -> (model, newFace model)
+    NewFaces faces -> ({model | dieFaces = faces }, Cmd.none)
 
+newFace : Model -> Cmd Message
+newFace model =
+  Random.generate NewFaces (Random.list (List.length model.dieFaces) (Random.int 1 6))
 
 -- VIEW
 
@@ -37,11 +40,7 @@ view model =
   div [style [ ("margin", "5px") ] ]
   [ div []
     [ span [style [ ("padding", "5px") ] ]
-      [ die model.dieFace
-      ]
-    , span [style [ ("padding", "5px") ] ]
-      [ die model.dieFace
-      ]
+      (List.map die model.dieFaces)
     ]
   , div []
     [ button [ style [ ("margin", "5px") ], onClick Roll ] [ text "Roll" ]
@@ -60,4 +59,4 @@ subscriptions model =
 
 init : (Model, Cmd Message)
 init =
-  (Model 1, Cmd.none)
+  (Model [6, 6, 6], Cmd.none)
