@@ -34,12 +34,19 @@ update message model =
 
 view : Model -> Html Message
 view model =
-  div [style [ ("padding", "5px") ] ]
-    [ die model.dieFace
-    , div []
-      [ button [ onClick Roll ] [ text "Roll" ]
+  div [style [ ("margin", "5px") ] ]
+  [ div []
+    [ span [style [ ("padding", "5px") ] ]
+      [ die model.dieFace
+      ]
+    , span [style [ ("padding", "5px") ] ]
+      [ die model.dieFace
       ]
     ]
+  , div []
+    [ button [ style [ ("margin", "5px") ], onClick Roll ] [ text "Roll" ]
+    ]
+  ]
 
 
 -- SUBSCRIPTIONS
