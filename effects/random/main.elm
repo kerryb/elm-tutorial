@@ -39,14 +39,15 @@ view : Model -> Html Message
 view model =
   div [style [ ("margin", "5px") ] ]
   [ div []
-    [ span [style [ ("padding", "5px") ] ]
-      (List.map die model.dieFaces)
-    ]
+    (List.map die model.dieFaces)
   , div []
     [ button [ style [ ("margin", "5px") ], onClick Roll ] [ text "Roll" ]
     ]
   ]
 
+die : Int -> Html Message
+die dieFace =
+  span [style [ ("padding", "5px") ] ] [ Die.die dieFace ]
 
 -- SUBSCRIPTIONS
 
