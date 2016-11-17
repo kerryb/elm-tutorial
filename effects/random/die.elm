@@ -1,10 +1,9 @@
+module Die exposing (die)
+
 import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Dict
-
-main : Html.Html msg
-main = die 6
 
 die : Int -> Html.Html msg
 die number =

@@ -2,6 +2,7 @@ import Html exposing (..)
 import Html.App as App
 import Html.Events exposing (..)
 import Random
+import Die exposing (die)
 
 main = App.program { init = init
                    , view = view
@@ -33,7 +34,7 @@ update message model =
 view : Model -> Html Message
 view model =
   div []
-    [ h1 [] [ text (toString model.dieFace) ]
+    [ die model.dieFace
     , button [ onClick Roll ] [ text "Roll" ]
     ]
 
