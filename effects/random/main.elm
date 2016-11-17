@@ -1,15 +1,18 @@
+module Main exposing (..)
+
 import Html exposing (..)
-import Html.App as App
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import Random
 import Die exposing (die)
 
-main = App.program { init = init
-                   , view = view
-                   , update = update
-                   , subscriptions = subscriptions
-                   }
+main =
+  Html.program
+    { init = init
+    , view = view
+    , update = update
+    , subscriptions = subscriptions
+    }
 
 -- MODEL
 
@@ -17,17 +20,19 @@ type alias Model =
   { dieFaces : List Int
   }
 
-
 -- UPDATE
 
-type Message = Roll
-             | NewFaces (List Int)
+type Message
+  = Roll
+  | NewFaces (List Int)
 
-update : Message -> Model -> (Model, Cmd Message)
+update : Message -> Model -> ( Model, Cmd Message )
 update message model =
   case message of
-    Roll -> (model, newFace model)
-    NewFaces faces -> ({model | dieFaces = faces }, Cmd.none)
+    Roll ->
+      ( model, newFace model )
+    NewFaces faces ->
+      ( { model | dieFaces = faces }, Cmd.none )
 
 newFace : Model -> Cmd Message
 newFace model =
@@ -37,17 +42,17 @@ newFace model =
 
 view : Model -> Html Message
 view model =
-  div [style [ ("margin", "5px") ] ]
-  [ div []
-    (List.map die model.dieFaces)
-  , div []
-    [ button [ style [ ("margin", "5px") ], onClick Roll ] [ text "Roll" ]
+  div [ style [ ( "margin", "5px" ) ] ]
+    [ div []
+      (List.map die model.dieFaces)
+    , div []
+      [ button [ style [ ( "margin", "5px" ) ], onClick Roll ] [ text "Roll" ]
+      ]
     ]
-  ]
 
 die : Int -> Html Message
 die dieFace =
-  span [style [ ("padding", "5px") ] ] [ Die.die dieFace ]
+  span [ style [ ( "padding", "5px" ) ] ] [ Die.die dieFace ]
 
 -- SUBSCRIPTIONS
 
@@ -55,9 +60,8 @@ subscriptions : Model -> Sub Message
 subscriptions model =
   Sub.none
 
-
 -- INIT
 
-init : (Model, Cmd Message)
+init : ( Model, Cmd Message )
 init =
-  (Model [6, 6, 6], Cmd.none)
+  ( Model [ 6, 6, 6 ], Cmd.none )
